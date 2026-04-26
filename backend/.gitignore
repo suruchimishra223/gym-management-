@@ -1,0 +1,9 @@
+# Node modules (packages)
+node_modules/
+
+# Environment file (Very important to ignore)
+.env
+
+# IDEs and Editors
+.vscode/
+.idea/
