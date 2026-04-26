@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Razorpay from "razorpay";
 
-import UserRoutes from "./routes/UserRoutes.js";
+import UserRoutes from "./routes/userRoutes.js";
 import EmailRoutes from "./routes/EmailRoutes.js";
-import PaymentRoutes from "./routes/paymentRoutes.js"; // ✅ ADD THIS
+import PaymentRoutes from "./routes/paymentRoutes.js";
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ export const razorpay = new Razorpay({
 // Routes
 app.use("/api/users", UserRoutes);
 app.use("/api/email", EmailRoutes);
-app.use("/api/payment", PaymentRoutes); // ✅ ADD THIS
+app.use("/api/payment", PaymentRoutes);
 
 // Test route
 app.get("/", (req, res) => {
@@ -38,8 +38,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB connected");
-
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   })
