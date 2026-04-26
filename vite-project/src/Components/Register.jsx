@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../App.css'; // external CSS file
+import '../App.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -60,7 +60,8 @@ const Register = () => {
         age: Number(formData.age),
       };
 
-      const response = await axios.post('http://localhost:4000/api/user/register', payload);
+      // ✅ SAHI URL - "users" with 's'
+      const response = await axios.post('http://localhost:4000/api/users/register', payload);
 
       setSuccessMessage(response.data.message || 'Registration successful!');
       setFormData({

@@ -1,12 +1,12 @@
 import express from 'express';
-import { register, login } from '../controllers/UserController.js';
+import { register, login } from '../controllers/userController.js';  // ✅ small u, small c
 import {
   createHome,
   getAllHome,
   getGymHomeById,
   updateHome,
   deleteHome,
-} from '../controllers/HomeController.js';
+} from '../controllers/homeController.js';  // ✅ small h, small c
 import upload from '../middlewares/upload.js';
 
 const router = express.Router();

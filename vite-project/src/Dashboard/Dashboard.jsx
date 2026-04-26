@@ -1,13 +1,18 @@
-// Dashboard.jsx
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 
 function Dashboard() {
-  function logout() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // ✅ Clear localStorage
     localStorage.removeItem('token');
-    window.location.reload();
-  }
+    localStorage.removeItem('user');
+    
+    // ✅ Redirect to Login page
+    navigate('/login');
+  };
 
   return (
     <div className="dashboard-main">
@@ -16,14 +21,20 @@ function Dashboard() {
         <div className="logo">
           <h2>🏋️‍♂️ GYM</h2>
         </div>
+        
         <ul className="sidebar-menu">
-          <li><Link to="/dashboard" className="sidebar-link">🏠 Home</Link></li>
+          <li><Link to="/dashboard/home" className="sidebar-link">🏠 Home</Link></li>
           <li><Link to="/dashboard/about" className="sidebar-link">📄 About</Link></li>
-          <li><Link to="/dashboard/program" className="sidebar-link">💪 Program</Link></li>           {/* ✅ MATCHES */}
-          <li><Link to="/dashboard/membership" className="sidebar-link">🏆 Membership</Link></li>     {/* ✅ MATCHES */}
-          <li><Link to="/dashboard/contact" className="sidebar-link">📧 Contact</Link></li>           {/* ✅ MATCHES */}
+          <li><Link to="/dashboard/program" className="sidebar-link">💪 Program</Link></li>
+          <li><Link to="/dashboard/membership" className="sidebar-link">🏆 Membership</Link></li>
+          <li><Link to="/dashboard/contact" className="sidebar-link">📧 Contact</Link></li>
         </ul>
-        <button onClick={logout} className="logout-btn">Logout</button>
+        
+        {/* ✅ Logout Button */}
+        <button onClick={handleLogout} className="logout-btn">
+          🚪 Logout
+        </button>
+        
         <label htmlFor="sidebar-toggle" className="sidebar-toggle-label">
           <span className="hamburger"></span>
         </label>

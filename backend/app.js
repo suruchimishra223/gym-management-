@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import Razorpay from "razorpay";
 
 import UserRoutes from "./routes/userRoutes.js";
-import EmailRoutes from "./routes/EmailRoutes.js";
+import EmailRoutes from "./routes/emailRoutes.js";
 import PaymentRoutes from "./routes/paymentRoutes.js";
 
 dotenv.config();
