@@ -81,7 +81,7 @@ export default DashboardMembership;
 // 🎨 Styles
 const container = {
   padding: "40px",
-  background: "linear-gradient(to right, #1e3c72, #2a5298)",
+  background: "linear-gradient(to right, #1a1b1d, #2a5298)",
   minHeight: "100vh",
   color: "#fff",
 };

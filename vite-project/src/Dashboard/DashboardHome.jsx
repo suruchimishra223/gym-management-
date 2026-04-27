@@ -1,83 +1,258 @@
 import React, { useEffect, useState } from "react";
+import { FaUsers, FaDumbbell, FaRupeeSign } from "react-icons/fa";
+
+// ✅ AOS IMPORT
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const DashboardHome = () => {
   const [stats, setStats] = useState({
-    totalMembers: 1245,
-    totalMessages: 89,
-    activePlans: 843,
-    totalRevenue: 1250000
+    totalMembers: 0,
+    totalPrograms: 0,
+    revenue: 0,
   });
-  const [recentMessages, setRecentMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const [members, setMembers] = useState([]);
+  const [programs, setPrograms] = useState([]);
   const [adminName, setAdminName] = useState("Admin");
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.name) setAdminName(user.name);
-    
-    // Mock data
-    setTimeout(() => {
-      setRecentMessages([
-        { id: 1, name: 'John Doe', email: 'john@example.com', message: 'Interested in membership', date: '2024-01-15' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com', message: 'Question about personal training', date: '2024-01-14' },
-      ]);
-      setLoading(false);
-    }, 500);
+    // ✅ AOS INIT
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+
+    const loadData = () => {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user.name) setAdminName(user.name);
+
+      const membersData = JSON.parse(localStorage.getItem("members") || "[]");
+      const programsData = JSON.parse(localStorage.getItem("programs") || "[]");
+
+      setMembers(membersData);
+      setPrograms(programsData);
+
+      setStats({
+        totalMembers: membersData.length,
+        totalPrograms: programsData.length,
+        revenue: membersData.length * 1000,
+      });
+    };
+
+    loadData();
+
+    window.addEventListener("storage", loadData);
+    return () => window.removeEventListener("storage", loadData);
   }, []);
 
-  if (loading) {
-    return <div style={{ textAlign: 'center', padding: '50px' }}>Loading Dashboard...</div>;
-  }
-
   return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', padding: '25px', borderRadius: '12px', marginBottom: '25px' }}>
-        <h2>Welcome back, {adminName}! 👋</h2>
-        <p>Here's what's happening with your fitness club today.</p>
+    <div style={styles.container}>
+
+      {/* HEADER */}
+      <div style={styles.header} data-aos="fade-down">
+        <h2>Welcome, {adminName} 👋</h2>
+        <p>Gym Management Dashboard</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '30px' }}>
-        <div style={{ background: '#e3f2fd', padding: '20px', borderRadius: '12px' }}>
-          <h3>👥 Total Members</h3>
-          <h2>{stats.totalMembers}</h2>
+      {/* STATS CARDS */}
+      <div style={styles.grid}>
+        
+        <div data-aos="zoom-in">
+          <Card 
+            icon={<FaUsers />} 
+            title="Members" 
+            value={stats.totalMembers} 
+            color="linear-gradient(135deg, #616265, #764ba2)" 
+          />
         </div>
-        <div style={{ background: '#e8f5e9', padding: '20px', borderRadius: '12px' }}>
-          <h3>📧 New Messages</h3>
-          <h2>{stats.totalMessages}</h2>
+
+        <div data-aos="zoom-in" data-aos-delay="100">
+          <Card 
+            icon={<FaDumbbell />} 
+            title="Programs" 
+            value={stats.totalPrograms} 
+            color="linear-gradient(135deg, #11998e, #2c2e2d)" 
+          />
         </div>
-        <div style={{ background: '#fff8e1', padding: '20px', borderRadius: '12px' }}>
-          <h3>💪 Active Plans</h3>
-          <h2>{stats.activePlans}</h2>
+
+        <div data-aos="zoom-in" data-aos-delay="200">
+          <Card 
+            icon={<FaRupeeSign />} 
+            title="Revenue" 
+            value={`₹${stats.revenue}`} 
+            color="linear-gradient(135deg, #5b5145, #ffd200)" 
+          />
         </div>
-        <div style={{ background: '#fce4ec', padding: '20px', borderRadius: '12px' }}>
-          <h3>💰 Total Revenue</h3>
-          <h2>₹12.5L</h2>
-        </div>
+
       </div>
 
-      <h2>📧 Recent Messages</h2>
-      <table style={{ width: '100%', background: 'white', borderRadius: '12px', overflow: 'hidden' }}>
-        <thead>
-          <tr style={{ background: '#1a1a2e', color: 'white' }}>
-            <th style={{ padding: '12px' }}>Name</th>
-            <th style={{ padding: '12px' }}>Email</th>
-            <th style={{ padding: '12px' }}>Message</th>
-            <th style={{ padding: '12px' }}>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {recentMessages.map(msg => (
-            <tr key={msg.id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '12px' }}>{msg.name}</td>
-              <td style={{ padding: '12px' }}>{msg.email}</td>
-              <td style={{ padding: '12px' }}>{msg.message}</td>
-              <td style={{ padding: '12px' }}>{msg.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* TABLES */}
+      <div style={styles.tables}>
+
+        {/* MEMBERS */}
+        <div data-aos="fade-right">
+          <TableBox title="Recent Members">
+            {members.length > 0 ? (
+              members.slice(-5).reverse().map((m) => (
+                <tr key={m.id}>
+                  <td>{m.name}</td>
+                  <td>{m.email}</td>
+                  <td>{m.membershipType}</td>
+                </tr>
+              ))
+            ) : (
+              <EmptyRow col={3} text="No Members Found" />
+            )}
+          </TableBox>
+        </div>
+
+        {/* PROGRAMS */}
+        <div data-aos="fade-left">
+          <TableBox title="Programs">
+            {programs.length > 0 ? (
+              programs.slice(-5).reverse().map((p) => (
+                <tr key={p.id}>
+                  <td>{p.name || p.programName}</td>
+                  <td>{p.duration}</td>
+                  <td>₹{p.price}</td>
+                </tr>
+              ))
+            ) : (
+              <EmptyRow col={3} text="No Programs Found" />
+            )}
+          </TableBox>
+        </div>
+
+      </div>
     </div>
   );
 };
 
 export default DashboardHome;
+
+
+
+// 🔹 CARD COMPONENT
+const Card = ({ icon, title, value, color }) => (
+  <div style={{ ...styles.card, background: color }}>
+    <div>
+      <p style={styles.cardTitle}>{title}</p>
+      <h2 style={styles.cardValue}>{value}</h2>
+    </div>
+    <div style={styles.iconBox}>{icon}</div>
+  </div>
+);
+
+
+// 🔹 TABLE COMPONENT
+const TableBox = ({ title, children }) => (
+  <div style={styles.box}>
+    <h3 style={styles.boxTitle}>{title}</h3>
+    <table style={styles.table}>
+      <thead>
+        <tr style={styles.thead}>
+          <th>Name</th>
+          <th>Details</th>
+          <th>Extra</th>
+        </tr>
+      </thead>
+      <tbody>{children}</tbody>
+    </table>
+  </div>
+);
+
+
+// 🔹 EMPTY ROW
+const EmptyRow = ({ col, text }) => (
+  <tr>
+    <td colSpan={col} style={styles.empty}>
+      {text}
+    </td>
+  </tr>
+);
+
+
+// 🎨 STYLES
+const styles = {
+  container: {
+    padding: "20px",
+    background: "#f4f6f9",
+    minHeight: "100vh",
+  },
+
+  header: {
+    marginBottom: "25px",
+  },
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: "20px",
+    marginBottom: "30px",
+  },
+
+  card: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "20px",
+    borderRadius: "14px",
+    color: "white",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
+    transition: "0.3s",
+    cursor: "pointer",
+  },
+
+  cardTitle: {
+    fontSize: "14px",
+    opacity: 0.85,
+  },
+
+  cardValue: {
+    fontSize: "26px",
+    fontWeight: "bold",
+  },
+
+  iconBox: {
+    fontSize: "28px",
+    background: "rgba(255,255,255,0.2)",
+    padding: "12px",
+    borderRadius: "12px",
+  },
+
+  tables: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+  },
+
+  box: {
+    background: "white",
+    padding: "20px",
+    borderRadius: "12px",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+  },
+
+  boxTitle: {
+    marginBottom: "10px",
+    borderBottom: "2px solid #eee",
+    paddingBottom: "5px",
+  },
+
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+  },
+
+  thead: {
+    background: "#1a1a2e",
+    color: "white",
+  },
+
+  empty: {
+    textAlign: "center",
+    padding: "15px",
+    color: "#888",
+  },
+};

@@ -1,5 +1,7 @@
-import "../App.css"
-import React, { useState } from 'react';
+import "../App.css";
+import React, { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const BMICalculator = () => {
   const [height, setHeight] = useState('');
@@ -8,6 +10,14 @@ const BMICalculator = () => {
   const [gender, setGender] = useState('male');
   const [bmi, setBmi] = useState(null);
   const [message, setMessage] = useState('');
+
+  // ✅ AOS init
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true
+    });
+  }, []);
 
   const calculateBMI = () => {
     let heightInMeters;
@@ -34,9 +44,9 @@ const BMICalculator = () => {
 
     if (calculatedBMI < 18.5) {
       setMessage('You are underweight.');
-    } else if (calculatedBMI >= 18.5 && calculatedBMI < 24.9) {
+    } else if (calculatedBMI < 24.9) {
       setMessage('You have a normal weight.');
-    } else if (calculatedBMI >= 25 && calculatedBMI < 29.9) {
+    } else if (calculatedBMI < 29.9) {
       setMessage('You are overweight.');
     } else {
       setMessage('You are obese.');
@@ -44,27 +54,41 @@ const BMICalculator = () => {
   };
 
   return (
-    <div style={{
-      maxWidth: '900px',
-      margin: '30px auto',
-      padding: '20px',
-      display: 'flex',
-      gap: '20px',
-      backgroundColor: '#f5f5f5',
-      borderRadius: '10px',
-      boxShadow: '0 0 10px rgba(0,0,0,0.1)'
-    }}>
-      {/* Left Image Section */}
-      <div style={{ flex: '1', textAlign: 'center' }}>
+    <div 
+      style={{
+        maxWidth: '900px',
+        margin: '30px auto',
+        padding: '20px',
+        display: 'flex',
+        gap: '20px',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '10px',
+        boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+      }}
+    >
+
+      {/* 🔥 Left Image */}
+      <div 
+        style={{ flex: '1', textAlign: 'center' }}
+        data-aos="fade-right"
+      >
         <img
           src={"bmi.jpeg"}
           alt="BMI Illustration"
-          style={{ width: '200%', maxWidth: '350px', borderRadius: '10px', height:'100%'}}
+          style={{
+            width: '100%',
+            maxWidth: '350px',
+            borderRadius: '10px',
+            height: '100%'
+          }}
         />
       </div>
 
-      {/* Right BMI Calculator Section */}
-      <div style={{ flex: '1' }}>
+      {/* 🔥 Right Form */}
+      <div 
+        style={{ flex: '1' }}
+        data-aos="fade-left"
+      >
         <h2 style={{ textAlign: 'center' }}>BMI Calculator</h2>
 
         {/* Gender */}
@@ -105,7 +129,7 @@ const BMICalculator = () => {
               type="text"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
-              placeholder={unit === 'metric' ? 'e.g. 170' : "e.g. 5'8"}
+              placeholder={unit === 'metric' ? '170' : "5'8"}
               style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             />
           </label>
@@ -119,7 +143,7 @@ const BMICalculator = () => {
               type="text"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
-              placeholder={unit === 'metric' ? 'e.g. 70' : 'e.g. 154'}
+              placeholder={unit === 'metric' ? '70' : '154'}
               style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             />
           </label>
@@ -137,16 +161,20 @@ const BMICalculator = () => {
             borderRadius: '5px',
             cursor: 'pointer'
           }}
+          data-aos="zoom-in"
         >
           Calculate BMI
         </button>
 
         {/* Result */}
         {bmi && (
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <div 
+            style={{ marginTop: '20px', textAlign: 'center' }}
+            data-aos="fade-up"
+          >
             <h3>Your BMI: {bmi}</h3>
             <p>{message}</p>
-            <p><strong>Gender:</strong> {gender.charAt(0).toUpperCase() + gender.slice(1)}</p>
+            <p><strong>Gender:</strong> {gender}</p>
           </div>
         )}
       </div>

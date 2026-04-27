@@ -1,7 +1,17 @@
-import React from 'react';
-import '../App.css'; // We'll create this CSS file
+import React, { useEffect } from 'react';
+import '../App.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Gallery = () => {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
   const galleryImages = [
     "/woman.jpeg",
     "/gym1.jpeg", 
@@ -15,11 +25,19 @@ const Gallery = () => {
   return (
     <section className='gallery'>
       <div className="gallery-container">
-        <h1>BETTER BEATS YOURSELF</h1> {/* Fixed typo from "BETEER" */}
-        
+
+        {/* Title */}
+        <h1 data-aos="fade-up">BETTER BEATS YOURSELF</h1>
+
+        {/* First Row */}
         <div className="image-grid">
           {galleryImages.slice(0, 4).map((image, index) => (
-            <div className="image-item" key={index}>
+            <div 
+              className="image-item" 
+              key={index}
+              data-aos="zoom-in"
+              data-aos-delay={index * 100}
+            >
               <img src={image} alt={`gallery ${index}`} />
               <div className="image-overlay">
                 <span>View More</span>
@@ -27,10 +45,16 @@ const Gallery = () => {
             </div>
           ))}
         </div>
-        
+
+        {/* Second Row */}
         <div className="image-grid">
-          {galleryImages.slice(5).map((image, index) => (
-            <div className="image-item" key={index + 4}>
+          {galleryImages.slice(4).map((image, index) => (
+            <div 
+              className="image-item" 
+              key={index + 4}
+              data-aos="fade-up"
+              data-aos-delay={index * 120}
+            >
               <img src={image} alt={`gallery ${index + 4}`} />
               <div className="image-overlay">
                 <span>View More</span>
@@ -38,9 +62,10 @@ const Gallery = () => {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
-}
+};
 
 export default Gallery;

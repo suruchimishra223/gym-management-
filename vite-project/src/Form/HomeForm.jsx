@@ -13,8 +13,8 @@ const GymHomeForm = () => {
   const [uploadError, setUploadError] = useState("");
 
   // Cloudinary config - replace with your actual credentials
-  const cloudName = "your_cloud_name";
-  const uploadPreset = "your_upload_preset";
+  const cloudName = "dxx694knf";
+  const uploadPreset = "ml_default";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
